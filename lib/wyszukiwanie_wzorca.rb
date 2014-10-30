@@ -28,12 +28,19 @@ class WyszukiwanieWzorca
   end
 
   def naiwny_sposob_szukania_wzorca
-    for s in 0..(@text.length - @patter.length + 1)
-      @aktualnie_wyciety = @text[s..(s + @patter.length - 1)]
-      if @aktualnie_wyciety.eql? @patter
-        puts 'Wrzorzec występuje z przesunięciem ' + s.to_s
-      end
+    for s in 0..(@text.length - @patter.length)
+      @aktualnie_wyciety =
+        if @patter.length > 0
+          @text[s..(s + @patter.length - 1)]
+        else
+          nil
+        end
+
+        if @aktualnie_wyciety.eql? @patter
+          puts 'Wrzorzec występuje z przesunięciem ' + s.to_s
+        end
     end
+    return
   end
 
   def rk(d, q)
