@@ -28,17 +28,26 @@ class WyszukiwanieWzorca
   end
 
   def naiwny_sposob_szukania_wzorca
-    for s in 0..(@text.length - @patter.length + 1)
+    if (check_conditions==false); 
+      return [] 
+    end
+    arr = Array.new()
+         
+    s = 0       
+    while s < (@text.length - @patter.length + 1) do
       @aktualnie_wyciety = @text[s..(s + @patter.length - 1)]
       if @aktualnie_wyciety.eql? @patter
         puts 'Wrzorzec występuje z przesunięciem ' + s.to_s
+        arr << s
       end
+      s = s + 1
     end
+    arr
   end
 
   def rk(d, q)
-#    i = 0
-#    j = 0
+    if (check_conditions==false); return [] end
+    arr = Array.new()
     p = 0
     t = 0
     h = 1
@@ -64,6 +73,7 @@ class WyszukiwanieWzorca
 
         if (j == @patter.length)
           puts 'Wrzorzec występuje z przesunięciem ' + i.to_s
+          arr << i
         end
       end
 
@@ -74,9 +84,12 @@ class WyszukiwanieWzorca
         end
       end
     end
+    arr
   end
 
   def knuth_morris_pratt
+    if (check_conditions == false); return [] end
+    arr = Array.new()
     longest_prefix_suffix = oblicz_lps_tab
     i = 0
     j = 0
@@ -89,6 +102,7 @@ class WyszukiwanieWzorca
 
       if j == @patter.length
         puts 'Wrzorzec występuje z przesunięciem ' + (i - j).to_s
+        arr << (i - j)
         j = longest_prefix_suffix[j - 1]
       elsif @patter[j] != @text[i]
 
@@ -100,9 +114,14 @@ class WyszukiwanieWzorca
 
       end
     end
+    arr
   end
 
   private
+  
+  def check_conditions
+     !(@text.length == 0 || @patter.length == 0 || @patter.length > @text.length)   
+  end
 
   def oblicz_lps_tab
     length = 0
