@@ -25,4 +25,15 @@ RSpec.describe WyszukiwanieWzorca do
 	  end
 	end
 
+	describe ".rk" do
+		it 'return "Wrzorzec występuje z przesunięciem 0"' do
+			STDOUT.should_receive(:puts).with('Wrzorzec występuje z przesunięciem 0')
+			WyszukiwanieWzorca.new("a","a").rk(128, 27077)
+		end
+
+		it 'raise error when give two zeros' do
+			expect{ WyszukiwanieWzorca.new("a","a").rk(0, 0) }.to raise_error(ZeroDivisionError)
+		end
+	end
+
  end
