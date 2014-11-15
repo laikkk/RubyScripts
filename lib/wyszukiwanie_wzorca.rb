@@ -11,33 +11,18 @@ class WyszukiwanieWzorca
     elsif patternSource.class != String
       fail ArgumentError.new('patternSource must be type of File or String.')
     end
-
-    @text =
-      if File.file?(textSource)
-        IO.read(textSource)
-      else
-        textSource
-      end
-
-    @patter =
-      if File.file?(patternSource)
-        IO.read(patternSource)
-      else
-        patternSource
-      end
+    @text , @patter = textSource, patternSource
   end
 
-  def naiwny_sposob_szukania_wzorca
-    if (check_conditions==false); 
-      return [] 
-    end
+  def naiwny_sposob
+    if (check_conditions == false); return [] end
     arr = Array.new()
-         
-    s = 0       
+
+    s = 0
     while s < (@text.length - @patter.length + 1) do
       @aktualnie_wyciety = @text[s..(s + @patter.length - 1)]
       if @aktualnie_wyciety.eql? @patter
-        puts 'Wrzorzec występuje z przesunięciem ' + s.to_s
+        #puts 'Wrzorzec występuje z przesunięciem ' + s.to_s
         arr << s
       end
       s = s + 1
@@ -45,8 +30,8 @@ class WyszukiwanieWzorca
     arr
   end
 
-  def rk(d, q)
-    if (check_conditions==false); return [] end
+  def rk(d = 128, q = 27077)
+    if (check_conditions == false); return [] end
     arr = Array.new()
     p = 0
     t = 0
@@ -72,7 +57,7 @@ class WyszukiwanieWzorca
         end
 
         if (j == @patter.length)
-          puts 'Wrzorzec występuje z przesunięciem ' + i.to_s
+          #puts 'Wrzorzec występuje z przesunięciem ' + i.to_s
           arr << i
         end
       end
@@ -87,10 +72,11 @@ class WyszukiwanieWzorca
     arr
   end
 
-  def knuth_morris_pratt
+  def kmp
     if (check_conditions == false); return [] end
     arr = Array.new()
     longest_prefix_suffix = oblicz_lps_tab
+    #puts oblicz_lps_tab
     i = 0
     j = 0
 
@@ -101,7 +87,7 @@ class WyszukiwanieWzorca
       end
 
       if j == @patter.length
-        puts 'Wrzorzec występuje z przesunięciem ' + (i - j).to_s
+        #puts 'Wrzorzec występuje z przesunięciem ' + (i - j).to_s
         arr << (i - j)
         j = longest_prefix_suffix[j - 1]
       elsif @patter[j] != @text[i]
@@ -118,9 +104,9 @@ class WyszukiwanieWzorca
   end
 
   private
-  
+
   def check_conditions
-     !(@text.length == 0 || @patter.length == 0 || @patter.length > @text.length)   
+     !(@text.length == 0 || @patter.length == 0 || @patter.length > @text.length)
   end
 
   def oblicz_lps_tab
